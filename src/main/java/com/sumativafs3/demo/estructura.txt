@@ -1,0 +1,33 @@
+└── com.sumativafs3.demo
+    ├── config
+    │   ├── SecurityConfig.java
+    │   └── InitialDataLoader.java
+    ├── controllers
+    │   ├── ComentarioController.java
+    │   ├── PublicacionController.java
+    │   └── UsuarioController.java
+    ├── exceptions
+    │   ├── GlobalExceptionHandler.java
+    │   └── ResourceNotFoundException.java
+    ├── models
+    │   ├── Comentario.java
+    │   ├── Publicacion.java
+    │   ├── Rol.java
+    │   └── Usuario.java
+    ├── repositories
+    │   ├── ComentarioRepository.java
+    │   ├── PublicacionRepository.java
+    │   ├── RolRepository.java
+    │   └── UsuarioRepository.java
+    ├── response
+    │   └── ErrorResponse.java
+    ├── security              <- Nuevo paquete
+    │   ├── CustomUserDetails.java
+    │   ├── CustomUserDetailsService.java
+    │   ├── CustomAuthenticationEntryPoint.java  <- Nuevo
+    │   └── CustomAccessDeniedHandler.java       <- Nuevo
+    └── services
+        ├── ComentarioService.java
+        ├── PublicacionService.java
+        ├── RolService.java
+        └── UsuarioService.java
