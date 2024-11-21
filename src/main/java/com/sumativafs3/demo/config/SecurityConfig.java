@@ -1,4 +1,3 @@
-// SecurityConfig.java (actualizado)
 package com.sumativafs3.demo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +32,27 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+                // Rutas públicas
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/roles/crear").permitAll()
+                .requestMatchers("/api/auth/registro").permitAll()
                 
-                // Endpoints de publicaciones
-                .requestMatchers(HttpMethod.GET, "/api/publicaciones").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/publicaciones").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/publicaciones/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/publicaciones/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/publicaciones/{id}").hasAnyRole("ADMIN", "USER")
+                // Rutas para administración de productos
+                .requestMatchers(HttpMethod.GET, "/api/productos/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/productos").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")
                 
-                // Endpoints de comentarios
-                .requestMatchers(HttpMethod.GET, "/api/publicaciones/*/comentarios").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/api/publicaciones/*/comentarios/*").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.POST, "/api/publicaciones/*/comentarios").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.PUT, "/api/publicaciones/*/comentarios/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/publicaciones/*/comentarios/*").hasRole("ADMIN")
+                // Rutas para compras
+                .requestMatchers(HttpMethod.GET, "/api/compras").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/api/compras").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/api/compras/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/api/compras/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/compras/**").hasRole("ADMIN")
+                
+                // Rutas para administración de usuarios
+                .requestMatchers("/api/usuarios/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/usuarios/perfil").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/api/usuarios/perfil").hasAnyRole("ADMIN", "USER")
                 
                 // Cualquier otra petición requiere autenticación
                 .anyRequest().authenticated()
