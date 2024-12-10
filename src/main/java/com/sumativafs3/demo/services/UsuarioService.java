@@ -31,7 +31,12 @@ public class UsuarioService {
 
     public Usuario getUsuarioById(Long id) {
         return usuarioRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
+    }
+
+    public Usuario findByEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
     public Usuario registrarUsuario(Usuario usuario) {
@@ -58,18 +63,17 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-
     public Usuario updateUsuario(Long id, Usuario usuarioDetails) {
         Usuario usuario = getUsuarioById(id);
         usuario.setNombre(usuarioDetails.getNombre());
         usuario.setEmail(usuarioDetails.getEmail());
-        
+
         if (usuarioDetails.getPassword() != null && !usuarioDetails.getPassword().isEmpty()) {
             // Validar la nueva contraseña
             PasswordValidator.validatePassword(usuarioDetails.getPassword());
             usuario.setPassword(passwordEncoder.encode(usuarioDetails.getPassword()));
         }
-        
+
         if (usuarioDetails.getRol() != null) {
             usuario.setRol(usuarioDetails.getRol());
         }
@@ -80,4 +84,16 @@ public class UsuarioService {
         Usuario usuario = getUsuarioById(id);
         usuarioRepository.delete(usuario);
     }
+    public String getRolByUsuarioId(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return usuario.getRol().getNombre();
+    }
+    
+    public String getRolByUsuarioEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return usuario.getRol().getNombre();
+    }
+    
 }

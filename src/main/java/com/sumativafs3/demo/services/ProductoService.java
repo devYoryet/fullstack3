@@ -27,7 +27,7 @@ public class ProductoService {
     // Obtener un producto por ID
     public Producto getProductoById(Long id) {
         return productoRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Producto", "id", id));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto", "id", id));
     }
 
     // Crear un nuevo producto
@@ -45,12 +45,17 @@ public class ProductoService {
     // Actualizar un producto existente
     public Producto updateProducto(Long id, Producto productoDetails) {
         Producto producto = getProductoById(id);
-        
+
         producto.setNombre(productoDetails.getNombre());
         producto.setDescripcion(productoDetails.getDescripcion());
         producto.setPrecio(productoDetails.getPrecio());
         producto.setStock(productoDetails.getStock());
-        
+        producto.setCantidad(productoDetails.getCantidad());
+
+        if (productoDetails.getImagen() != null) {
+            producto.setImagen(productoDetails.getImagen());
+        }
+
         return productoRepository.save(producto);
     }
 

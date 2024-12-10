@@ -2,16 +2,29 @@
 package com.sumativafs3.demo.controllers;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sumativafs3.demo.models.Producto;
 import com.sumativafs3.demo.services.ProductoService;
 
 @RestController
 @RequestMapping("/api/productos")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductoController {
 
     @Autowired
@@ -19,7 +32,7 @@ public class ProductoController {
 
     // Obtener todos los productos
     @GetMapping
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ "ROLE_ADMIN", "ROLE_USER" })
     public ResponseEntity<List<Producto>> getAllProductos() {
         List<Producto> productos = productoService.getAllProductos();
         return ResponseEntity.ok(productos);
@@ -27,7 +40,7 @@ public class ProductoController {
 
     // Obtener un producto por ID
     @GetMapping("/{id}")
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ "ROLE_ADMIN", "ROLE_USER" })
     public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
         Producto producto = productoService.getProductoById(id);
         return ResponseEntity.ok(producto);
@@ -42,11 +55,13 @@ public class ProductoController {
     }
 
     // Actualizar un producto existente
-    @PutMapping("/{id}")
-    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Producto> updateProducto(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @RequestBody Producto productoDetails) {
+        // Limpia referencias innecesarias
+        productoDetails.setDetalles(null);
+
         Producto updatedProducto = productoService.updateProducto(id, productoDetails);
         return ResponseEntity.ok(updatedProducto);
     }
@@ -61,7 +76,7 @@ public class ProductoController {
 
     // Obtener productos con stock disponible
     @GetMapping("/disponibles")
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @Secured({ "ROLE_ADMIN", "ROLE_USER" })
     public ResponseEntity<List<Producto>> getProductosDisponibles() {
         List<Producto> productos = productoService.getProductosDisponibles();
         return ResponseEntity.ok(productos);
@@ -71,7 +86,7 @@ public class ProductoController {
     @PutMapping("/{id}/stock")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<Producto> updateStock(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @RequestParam int cantidad) {
         Producto producto = productoService.updateStock(id, cantidad);
         return ResponseEntity.ok(producto);

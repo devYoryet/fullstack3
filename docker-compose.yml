@@ -7,11 +7,11 @@ services:
       - ORACLE_PWD=admin
       - ORACLE_CHARACTERSET=AL32UTF8
     ports:
-      - "1521:1521"
+      - "1522:1522"
     volumes:
       - oracle-data:/opt/oracle/oradata
     healthcheck:
-      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/admin@//localhost:1521/XEPDB1"]
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/admin@//localhost:1522/XEPDB1"]
       interval: 30s
       timeout: 10s
       retries: 5
