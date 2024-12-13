@@ -19,6 +19,10 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (usuario.getRol() == null || usuario.getRol().getNombre() == null) {
+            return Collections.emptyList();
+        }
+
         String roleName = usuario.getRol().getNombre();
         // Agregar el prefijo ROLE_ si no está presente
         if (!roleName.startsWith("ROLE_")) {

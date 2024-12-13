@@ -18,14 +18,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
     @Override
-    public void commence(HttpServletRequest request, 
-                        HttpServletResponse response,
-                        AuthenticationException authException) throws IOException {
-        
+    public void commence(HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException authException) throws IOException {
+
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8"); // Agregar esta línea
 
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now().toString());
@@ -34,6 +34,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         body.put("message", "Necesitas iniciar sesión para acceder a este recurso");
         body.put("path", request.getServletPath());
 
-        new ObjectMapper().writeValue(response.getOutputStream(), body);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getOutputStream(), body);
     }
 }

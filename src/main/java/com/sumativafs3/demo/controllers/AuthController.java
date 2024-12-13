@@ -40,22 +40,28 @@ public class AuthController {
         this.usuarioService = usuarioService;
         this.rolRepository = rolRepository;
     }
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder; // Cambiar de private a package-private
+
+    // Inicio de sesión
     @PostMapping("/login")
-public ResponseEntity<Usuario> login(@RequestBody LoginRequest loginRequest) {
-    Usuario usuario = usuarioService.findByEmail(loginRequest.getEmail());
-    if (usuario == null || !passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Respuesta 401 si las credenciales son incorrectas
+    public ResponseEntity<Usuario> login(@RequestBody LoginRequest loginRequest) {
+        // Buscar usuario por email
+        Usuario usuario = usuarioService.findByEmail(loginRequest.getEmail());
+        if (usuario == null || !passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Respuesta 401 si las credenciales son
+                                                                           // incorrectas
+        }
+
+        // Devuelve el usuario autenticado con su contraseña (no recomendado para
+        // producción)
+        usuario.setPassword(loginRequest.getPassword()); // Asignar contraseña en texto plano solo temporalmente
+        return ResponseEntity.ok(usuario);
     }
 
-    // Devuelve el usuario autenticado con su contraseña (bajo tu responsabilidad)
-    usuario.setPassword(loginRequest.getPassword()); // Asigna la contraseña en texto plano solo temporalmente
-    return ResponseEntity.ok(usuario);
-}
-
-
     // AuthController.java (modificado para manejar roles)
+    // Registro de usuario
     @PostMapping("/registro")
     public ResponseEntity<?> registro(@RequestBody RegisterRequest registerRequest) {
         try {
@@ -84,22 +90,24 @@ public ResponseEntity<Usuario> login(@RequestBody LoginRequest loginRequest) {
             Usuario usuario = new Usuario();
             usuario.setNombre(registerRequest.getNombre());
             usuario.setEmail(registerRequest.getEmail());
-            usuario.setPassword(registerRequest.getPassword());
+
+            // Codificar la contraseña antes de guardarla
+            usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
             // Asignar rol USER por defecto
             Rol rolUser = rolRepository.findByNombre("ROLE_USER")
                     .orElseThrow(() -> new RuntimeException("Error: Rol de usuario no encontrado."));
             usuario.setRol(rolUser);
 
+            // Guardar usuario en la base de datos
             Usuario nuevoUsuario = usuarioService.registrarUsuario(usuario);
             return ResponseEntity.ok(nuevoUsuario);
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(new LoginResponse("Error al registrar el usuario: " + e.getMessage()));
         }
-    }
+    } // AuthController.java (agregar este método)
 
-    // AuthController.java (agregar este método)
     @PostMapping("/registro/admin")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<?> registroAdmin(@RequestBody RegisterRequest registerRequest) {

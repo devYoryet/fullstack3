@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "admin-lte": "3.2"
+  },
+  "devDependencies": {
+    "karma": "^6.4.4",
+    "karma-coverage": "^2.2.1"
   }
 }

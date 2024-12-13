@@ -29,7 +29,6 @@ public class Compra {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonManagedReference // Relación gestionada, evita ciclos
     private List<DetalleCompra> detalles = new ArrayList<>();
 
     public Compra() {

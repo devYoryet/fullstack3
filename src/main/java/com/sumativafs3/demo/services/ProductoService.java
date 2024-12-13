@@ -72,10 +72,11 @@ public class ProductoService {
 
     // Actualizar stock de un producto
     public Producto updateStock(Long id, int cantidad) {
-        Producto producto = getProductoById(id);
         if (cantidad < 0) {
             throw new IllegalArgumentException("La cantidad no puede ser negativa");
         }
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto", "id", id));
         producto.setStock(cantidad);
         return productoRepository.save(producto);
     }

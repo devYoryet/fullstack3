@@ -19,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.sumativafs3.demo.security.CustomAccessDeniedHandler;
 import com.sumativafs3.demo.security.CustomAuthenticationEntryPoint;
+import com.google.common.util.concurrent.RateLimiter;
 
 @Configuration
 @EnableWebSecurity
@@ -76,5 +77,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public RateLimiter rateLimiter() {
+        return RateLimiter.create(10.0); // 10 requests per second
     }
 }
