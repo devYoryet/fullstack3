@@ -13,11 +13,13 @@ com.sumativafs3.demo
 │   └── ResourceNotFoundException.java
 ├── models
 │   ├── Compra.java
+|   |── DetalleCompra.java
 │   ├── Producto.java
 │   ├── Rol.java
 │   └── Usuario.java
 ├── repositories
 │   ├── CompraRepository.java
+|   ├── DetalleCompraRepository.java
 │   ├── ProductoRepository.java
 │   ├── RolRepository.java
 │   └── UsuarioRepository.java
@@ -31,7 +33,21 @@ com.sumativafs3.demo
 │   ├── CustomAuthenticationEntryPoint.java
 │   └── CustomAccessDeniedHandler.java
 └── services
-    ├── CompraService.java
-    ├── ProductoService.java
-    ├── RolService.java
-    └── UsuarioService.java
+|    ├── CompraService.java
+|    ├── ProductoService.java
+|    ├── RolService.java
+|    └── UsuarioService.java
+└── utils
+      └── PasswordValidator.java
+src/test/java/com/sumativafs3/demo/
+    ├── controllers/
+    │   └── ProductoControllerTest.java
+    ├── security/
+    │   └── CustomUserDetailsTest.java
+    └── services/
+        ├── CompraServiceTest.java
+        ├── ProductoServiceTest.java
+        └── UsuarioServiceTest.java
+
+mvn clean install
+
